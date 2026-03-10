@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+}
+
+.tailwind-root {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.sticky-glass {
+  backdrop-filter: blur(10px);
+  background: color-mix(in oklab, #0b1023 70%, transparent);
+  border-bottom: 1px solid rgba(144, 157, 255, 0.2);
+}
+
+.nav-hover {
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.nav-hover:hover {
+  transform: translateY(-2px);
+  color: #8b79ff !important;
+}
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #6682ff, #935dff);
+  z-index: 2000;
+}
+
+.avatar-wrap {
+  animation: floaty 4.5s ease-in-out infinite;
+}
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.section-block {
+  padding-top: 40px;
+  padding-bottom: 24px;
+}
+
+.tech-card,
+.project-card {
+  border: 1px solid rgba(154, 169, 255, 0.25);
+  border-radius: 14px;
+  padding: 14px;
+  cursor: pointer;
+}
+
+.hover-rise {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-rise:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(111, 131, 255, 0.22);
+}
+
+.input-ui {
+  width: min(640px, 100%);
+  border: 1px solid rgba(154, 169, 255, 0.35);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.chakra-ui-dark .input-ui {
+  background: rgba(15, 20, 39, 0.75);
+  color: #f3f5ff;
+}
