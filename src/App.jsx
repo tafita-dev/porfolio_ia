@@ -24,7 +24,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   AiOutlineAntDesign,
   AiOutlineCode,
@@ -32,6 +32,7 @@ import {
   AiOutlineThunderbolt,
 } from 'react-icons/ai';
 import { MdDarkMode, MdInsights, MdLightMode, MdWorkOutline } from 'react-icons/md';
+import { SiExpress, SiNextdotjs, SiReact } from 'react-icons/si';
 
 const MotionBox = motion(Box);
 
@@ -40,6 +41,9 @@ const technologies = [
   { name: 'JavaScript', icon: AiOutlineCode, level: 'Avancé' },
   { name: 'TypeScript', icon: MdInsights, level: 'Avancé' },
   { name: 'Node.js', icon: AiOutlineMobile, level: 'Intermédiaire+' },
+  { name: 'React Native', icon: SiReact, level: 'Avancé' },
+  { name: 'Express', icon: SiExpress, level: 'Avancé' },
+  { name: 'Next.js', icon: SiNextdotjs, level: 'Avancé' },
 ];
 
 const projects = [
@@ -80,11 +84,30 @@ const navLinks = ['about', 'technologies', 'projects', 'companies', 'contact'];
 export default function App() {
   const { colorMode, toggleColorMode } = useColorMode();
   const [selectedProject, setSelectedProject] = useState(null);
+  const [techIndex, setTechIndex] = useState(0);
+  const [isStickyActive, setIsStickyActive] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const bgPage = useMemo(() => (colorMode === 'dark' ? '#050816' : '#f6f7fc'), [colorMode]);
-  const textSoft = useMemo(() => (colorMode === 'dark' ? '#b5c0e9' : '#4a567c'), [colorMode]);
-  const cardBg = useMemo(() => (colorMode === 'dark' ? 'rgba(12,18,40,0.75)' : 'rgba(255,255,255,0.8)'), [colorMode]);
+  const bgPage = useMemo(() => (colorMode === 'dark' ? '#050816' : '#f4f6ff'), [colorMode]);
+  const textSoft = useMemo(() => (colorMode === 'dark' ? '#b5c0e9' : '#39476b'), [colorMode]);
+  const cardBg = useMemo(
+    () => (colorMode === 'dark' ? 'rgba(12,18,40,0.78)' : 'rgba(255,255,255,0.96)'),
+    [colorMode]
+  );
+  const headingTone = useMemo(() => (colorMode === 'dark' ? '#f5f7ff' : '#111b36'), [colorMode]);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTechIndex((prev) => (prev + 1) % technologies.length);
+    }, 2500);
+    return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => setIsStickyActive(window.scrollY > 16);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const openProject = (project) => {
     setSelectedProject(project);
@@ -92,14 +115,26 @@ export default function App() {
   };
 
   return (
-    <MotionBox bg={bgPage} minH="100vh" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+    <MotionBox
+      bg={bgPage}
+      minH="100vh"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7 }}
+    >
       <Box className="bg-aurora aurora-1" />
       <Box className="bg-aurora aurora-2" />
 
-      <Box as="header" position="sticky" top="0" zIndex="1000" className="sticky-glass">
+      <Box
+        as="header"
+        position="sticky"
+        top="0"
+        zIndex="1000"
+        className={`sticky-glass ${isStickyActive ? 'sticky-active' : ''}`}
+      >
         <Container maxW="7xl" py={3}>
           <Flex align="center" justify="space-between" gap={3}>
-            <Heading size="md" letterSpacing="wide">
+            <Heading size="md" letterSpacing="wide" color={headingTone}>
               Portfolio Vedette
             </Heading>
 
@@ -132,7 +167,7 @@ export default function App() {
             <Badge colorScheme="purple" px={3} py={1} borderRadius="full">
               Frontend Engineer • React Ecosystem
             </Badge>
-            <Heading mt={5} size="2xl" lineHeight="1.05" className="hero-title">
+            <Heading mt={5} size="2xl" lineHeight="1.05" className="hero-title" color={headingTone}>
               Je crée des interfaces haut de gamme inspirées des meilleurs portfolios.
             </Heading>
             <Text mt={5} color={textSoft} fontSize="lg" maxW="720px">
@@ -148,21 +183,6 @@ export default function App() {
                 Démarrer un projet
               </Button>
             </HStack>
-
-            <HStack mt={7} spacing={6} flexWrap="wrap">
-              <VStack align="start" spacing={0}>
-                <Text fontSize="2xl" fontWeight="800">+32</Text>
-                <Text color={textSoft} fontSize="sm">Projets livrés</Text>
-              </VStack>
-              <VStack align="start" spacing={0}>
-                <Text fontSize="2xl" fontWeight="800">4 ans</Text>
-                <Text color={textSoft} fontSize="sm">Expérience produit</Text>
-              </VStack>
-              <VStack align="start" spacing={0}>
-                <Text fontSize="2xl" fontWeight="800">95%</Text>
-                <Text color={textSoft} fontSize="sm">Satisfaction client</Text>
-              </VStack>
-            </HStack>
           </GridItem>
 
           <GridItem>
@@ -170,7 +190,9 @@ export default function App() {
               <Box className="avatar-wrap">
                 <Image src="/images/avatar.svg" alt="Avatar" boxSize="230px" mx="auto" />
               </Box>
-              <Text mt={4} textAlign="center" fontWeight="700">Votre Développeur Frontend</Text>
+              <Text mt={4} textAlign="center" fontWeight="700" color={headingTone}>
+                Votre Développeur Frontend
+              </Text>
               <Text mt={1} textAlign="center" color={textSoft} fontSize="sm">
                 React • UI/UX • Performance • Design System
               </Text>
@@ -182,7 +204,7 @@ export default function App() {
       <Container maxW="7xl" id="about" className="section-block">
         <Grid templateColumns={{ base: '1fr', lg: '1.2fr 0.8fr' }} gap={8}>
           <GridItem>
-            <Heading size="lg">À propos de moi</Heading>
+            <Heading size="lg" color={headingTone}>À propos de moi</Heading>
             <Text mt={3} color={textSoft}>
               Mon approche combine sens du détail visuel et rigueur technique. J\'adapte les codes
               des portfolios d\'élite pour créer une identité forte, claire et mémorable.
@@ -194,7 +216,7 @@ export default function App() {
                     <MdWorkOutline />
                   </Box>
                   <Box>
-                    <Text fontWeight="700">{item.role}</Text>
+                    <Text fontWeight="700" color={headingTone}>{item.role}</Text>
                     <Text fontSize="sm" color={textSoft}>
                       {item.company} • {item.period}
                     </Text>
@@ -209,7 +231,7 @@ export default function App() {
               <Text fontSize="sm" color={textSoft} mb={3}>
                 Témoignage client
               </Text>
-              <Text fontSize="lg" fontWeight="700">
+              <Text fontSize="lg" fontWeight="700" color={headingTone}>
                 “Un niveau d\'exécution visuelle exceptionnel et une livraison très propre techniquement.”
               </Text>
               <Text mt={4} color={textSoft}>— Product Lead, TechNova</Text>
@@ -219,29 +241,53 @@ export default function App() {
       </Container>
 
       <Container maxW="7xl" id="technologies" className="section-block">
-        <Heading size="lg">Technologies</Heading>
-        <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(4,1fr)' }} gap={4} mt={5}>
-          {technologies.map((tech) => {
-            const TechIcon = tech.icon;
-            return (
-              <GridItem key={tech.name} className="tech-card hover-rise" bg={cardBg}>
-                <Box fontSize="34px" display="flex" justifyContent="center" mb={2} color="purple.300">
-                  <TechIcon />
+        <Flex align="center" justify="space-between" mb={3}>
+          <Heading size="lg" color={headingTone}>Technologies</Heading>
+          <Text color={textSoft} fontSize="sm">Slide auto toutes les 2.5s</Text>
+        </Flex>
+
+        <Box className="tech-slider-shell" bg={cardBg}>
+          <motion.div
+            className="tech-slider-track"
+            animate={{ x: `-${techIndex * 100}%` }}
+            transition={{ ease: 'easeInOut', duration: 0.65 }}
+            style={{ display: 'flex' }}
+          >
+            {technologies.map((tech) => {
+              const TechIcon = tech.icon;
+              return (
+                <Box key={tech.name} className="tech-slide-item">
+                  <Box fontSize="42px" display="flex" justifyContent="center" mb={2} color="purple.300">
+                    <TechIcon />
+                  </Box>
+                  <Text textAlign="center" fontWeight="700" color={headingTone}>{tech.name}</Text>
+                  <Text textAlign="center" color={textSoft} fontSize="xs" mt={1}>
+                    {tech.level}
+                  </Text>
                 </Box>
-                <Text textAlign="center" fontWeight="700">
-                  {tech.name}
-                </Text>
-                <Text textAlign="center" color={textSoft} fontSize="xs" mt={1}>
-                  {tech.level}
-                </Text>
-              </GridItem>
-            );
-          })}
-        </Grid>
+              );
+            })}
+          </motion.div>
+        </Box>
+
+        <HStack mt={3} justify="center" spacing={2}>
+          {technologies.map((_, index) => (
+            <Box
+              key={`dot-${index}`}
+              h="8px"
+              w={index === techIndex ? '26px' : '8px'}
+              borderRadius="999px"
+              bg={index === techIndex ? 'purple.400' : 'gray.500'}
+              transition="all 0.25s ease"
+              cursor="pointer"
+              onClick={() => setTechIndex(index)}
+            />
+          ))}
+        </HStack>
       </Container>
 
       <Container maxW="7xl" id="projects" className="section-block">
-        <Heading size="lg">Projets</Heading>
+        <Heading size="lg" color={headingTone}>Projets</Heading>
         <Text color={textSoft} mt={2}>
           Sélection premium — cliquez sur une carte pour voir le détail.
         </Text>
@@ -254,7 +300,7 @@ export default function App() {
               onClick={() => openProject(project)}
             >
               <Image src={project.image} alt={project.title} borderRadius="12px" />
-              <Heading size="md" mt={3}>
+              <Heading size="md" mt={3} color={headingTone}>
                 {project.title}
               </Heading>
               <Text mt={2} color={textSoft}>
@@ -269,7 +315,7 @@ export default function App() {
       </Container>
 
       <Container maxW="7xl" id="companies" className="section-block">
-        <Heading size="lg">Entreprises où j’ai travaillé</Heading>
+        <Heading size="lg" color={headingTone}>Entreprises où j’ai travaillé</Heading>
         <HStack mt={4} spacing={3} flexWrap="wrap">
           {['TechNova', 'Digital Factory', 'Cloud Solutions', 'FinEdge', 'StartX'].map((company) => (
             <Badge key={company} px={4} py={2} borderRadius="full" className="hover-rise" bg={cardBg}>
@@ -280,7 +326,7 @@ export default function App() {
       </Container>
 
       <Container maxW="7xl" id="contact" className="section-block" pb={16}>
-        <Heading size="lg">Contact</Heading>
+        <Heading size="lg" color={headingTone}>Contact</Heading>
         <Text mt={2} color={textSoft}>
           Vous voulez un portfolio au niveau “vedette” ? Parlons-en.
         </Text>

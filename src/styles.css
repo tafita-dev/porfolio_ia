@@ -15,8 +15,14 @@ body {
 
 .sticky-glass {
   backdrop-filter: blur(14px);
-  background: color-mix(in oklab, #080d22 68%, transparent);
-  border-bottom: 1px solid rgba(135, 151, 255, 0.22);
+  background: color-mix(in oklab, #080d22 65%, transparent);
+  border-bottom: 1px solid rgba(135, 151, 255, 0.2);
+  transition: box-shadow 0.28s ease, background 0.28s ease;
+}
+
+.sticky-active {
+  box-shadow: 0 10px 30px rgba(27, 33, 60, 0.28);
+  background: color-mix(in oklab, #0a1025 78%, transparent);
 }
 
 .bg-aurora {
@@ -25,7 +31,7 @@ body {
   border-radius: 999px;
   filter: blur(70px);
   pointer-events: none;
-  opacity: 0.35;
+  opacity: 0.34;
 }
 
 .aurora-1 {
@@ -110,7 +116,19 @@ body {
   color: #a78bfa;
 }
 
-.tech-card,
+.tech-slider-shell {
+  overflow: hidden;
+  border: 1px solid rgba(154, 169, 255, 0.26);
+  border-radius: 18px;
+  backdrop-filter: blur(8px);
+}
+
+.tech-slide-item {
+  width: 100%;
+  min-width: 100%;
+  padding: 26px 16px;
+}
+
 .project-card {
   border: 1px solid rgba(154, 169, 255, 0.25);
   border-radius: 16px;
@@ -131,14 +149,24 @@ body {
 
 .input-ui {
   width: min(640px, 100%);
-  border: 1px solid rgba(154, 169, 255, 0.35);
+  border: 1px solid rgba(118, 133, 196, 0.45);
   border-radius: 12px;
   padding: 11px 12px;
   font: inherit;
-  background: rgba(255, 255, 255, 0.82);
+  color: #111b36;
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.input-ui::placeholder {
+  color: #6677a8;
 }
 
 .chakra-ui-dark .input-ui {
-  background: rgba(15, 20, 39, 0.75);
+  background: rgba(15, 20, 39, 0.82);
   color: #f3f5ff;
+  border: 1px solid rgba(154, 169, 255, 0.35);
+}
+
+.chakra-ui-dark .input-ui::placeholder {
+  color: #a9b5df;
 }
