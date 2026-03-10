@@ -22,14 +22,18 @@ import {
   useColorMode,
   useDisclosure,
 } from '@chakra-ui/react';
-import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
+import { AiOutlineApi, AiOutlineAntDesign, AiOutlineCode, AiOutlineMobile } from 'react-icons/ai';
+import { MdDarkMode, MdLightMode, MdWorkOutline } from 'react-icons/md';
+
+const MotionBox = motion(Box);
 
 const technologies = [
-  { name: 'React', img: '/images/tech/react.svg' },
-  { name: 'JavaScript', img: '/images/tech/js.svg' },
-  { name: 'TypeScript', img: '/images/tech/ts.svg' },
-  { name: 'Node.js', img: '/images/tech/node.svg' },
+  { name: 'React', icon: AiOutlineAntDesign },
+  { name: 'JavaScript', icon: AiOutlineCode },
+  { name: 'TypeScript', icon: AiOutlineApi },
+  { name: 'Node.js', icon: AiOutlineMobile },
 ];
 
 const projects = [
@@ -56,6 +60,12 @@ const projects = [
   },
 ];
 
+const timeline = [
+  { period: '2024 - Maintenant', role: 'Frontend React Developer', company: 'FinEdge' },
+  { period: '2022 - 2024', role: 'UI Engineer', company: 'Cloud Solutions' },
+  { period: '2020 - 2022', role: 'Web Integrator', company: 'Digital Factory' },
+];
+
 const navLinks = ['about', 'technologies', 'projects', 'companies', 'contact'];
 
 export default function App() {
@@ -63,7 +73,7 @@ export default function App() {
   const [selectedProject, setSelectedProject] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const bgPage = useMemo(() => (colorMode === 'dark' ? '#060816' : '#f7f8ff'), [colorMode]);
+  const bgPage = useMemo(() => (colorMode === 'dark' ? 'slate.950' : 'gray.50'), [colorMode]);
   const textSoft = useMemo(() => (colorMode === 'dark' ? '#b3bee8' : '#4b577a'), [colorMode]);
 
   const openProject = (project) => {
@@ -72,9 +82,7 @@ export default function App() {
   };
 
   return (
-    <Box bg={bgPage} minH="100vh" className="tailwind-root">
-      <Box className="scroll-progress" />
-
+    <MotionBox bg={bgPage} minH="100vh" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }}>
       <Box as="header" position="sticky" top="0" zIndex="1000" className="sticky-glass">
         <Container maxW="7xl" py={3}>
           <Flex align="center" justify="space-between" gap={3}>
@@ -89,7 +97,7 @@ export default function App() {
             <HStack>
               <IconButton
                 aria-label="toggle mode"
-                icon={colorMode === 'dark' ? <SunIcon /> : <MoonIcon />}
+                icon={colorMode === 'dark' ? <MdLightMode /> : <MdDarkMode />}
                 onClick={toggleColorMode}
               />
               <Button as="a" href="/CV.pdf" download colorScheme="purple">
@@ -107,10 +115,10 @@ export default function App() {
               Développeur Frontend React
             </Badge>
             <Heading mt={4} size="2xl" lineHeight="1.1">
-              Portfolio moderne avec Tailwind CSS + Chakra UI
+              Portfolio moderne avec Tailwind installé + Chakra UI
             </Heading>
             <Text mt={4} color={textSoft} fontSize="lg">
-              Design premium, sections claires, animation fluide et expérience utilisateur professionnelle.
+              Design premium, animations fluides et expérience utilisateur professionnelle.
             </Text>
             <HStack mt={6} spacing={3}>
               <Button colorScheme="blue" as="a" href="#projects">
@@ -134,31 +142,57 @@ export default function App() {
         <Text mt={3} color={textSoft}>
           J\'aide les entreprises à construire des interfaces web performantes, accessibles et élégantes.
         </Text>
+        <Stack mt={5} spacing={3}>
+          {timeline.map((item) => (
+            <Flex key={item.period} className="timeline-item" align="center" gap={3}>
+              <Box className="timeline-dot">
+                <MdWorkOutline />
+              </Box>
+              <Box>
+                <Text fontWeight="700">{item.role}</Text>
+                <Text fontSize="sm" color={textSoft}>
+                  {item.company} • {item.period}
+                </Text>
+              </Box>
+            </Flex>
+          ))}
+        </Stack>
       </Container>
 
       <Container maxW="7xl" className="section-block" id="technologies">
         <Heading size="lg">Technologies</Heading>
         <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(4,1fr)' }} gap={4} mt={5}>
-          {technologies.map((tech) => (
-            <GridItem key={tech.name} className="tech-card hover-rise">
-              <Image src={tech.img} alt={tech.name} boxSize="52px" mx="auto" mb={2} />
-              <Text textAlign="center" fontWeight="semibold">
-                {tech.name}
-              </Text>
-            </GridItem>
-          ))}
+          {technologies.map((tech) => {
+            const TechIcon = tech.icon;
+            return (
+              <GridItem key={tech.name} className="tech-card hover-rise">
+                <Box fontSize="36px" display="flex" justifyContent="center" mb={2} color="purple.300">
+                  <TechIcon />
+                </Box>
+                <Text textAlign="center" fontWeight="semibold">
+                  {tech.name}
+                </Text>
+              </GridItem>
+            );
+          })}
         </Grid>
       </Container>
 
       <Container maxW="7xl" className="section-block" id="projects">
         <Heading size="lg">Projets</Heading>
-        <Text color={textSoft} mt={2}>Cliquez sur un projet pour afficher les détails.</Text>
+        <Text color={textSoft} mt={2}>
+          Cliquez sur un projet pour afficher les détails.
+        </Text>
         <Grid templateColumns={{ base: '1fr', md: 'repeat(3,1fr)' }} gap={5} mt={5}>
           {projects.map((project) => (
             <GridItem key={project.title} className="project-card hover-rise" onClick={() => openProject(project)}>
               <Image src={project.image} alt={project.title} borderRadius="12px" />
-              <Heading size="md" mt={3}>{project.title}</Heading>
-              <Text mt={2} color={textSoft}>{project.short}</Text>
+              <Heading size="md" mt={3}>
+                {project.title}
+              </Heading>
+              <Text mt={2} color={textSoft}>
+                {project.short}
+              </Text>
             </GridItem>
           ))}
         </Grid>
@@ -181,7 +215,9 @@ export default function App() {
           <input className="input-ui" type="text" name="nom" placeholder="Nom" required />
           <input className="input-ui" type="email" name="email" placeholder="Email" required />
           <textarea className="input-ui" name="message" placeholder="Votre message" rows="5" required />
-          <Button type="submit" colorScheme="purple" alignSelf="flex-start">Envoyer email</Button>
+          <Button type="submit" colorScheme="purple" alignSelf="flex-start">
+            Envoyer email
+          </Button>
         </Stack>
       </Container>
 
@@ -195,11 +231,13 @@ export default function App() {
           <ModalHeader>{selectedProject?.title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            {selectedProject?.image && <Image src={selectedProject.image} alt={selectedProject.title} mb={4} borderRadius="md" />}
+            {selectedProject?.image && (
+              <Image src={selectedProject.image} alt={selectedProject.title} mb={4} borderRadius="md" />
+            )}
             <Text>{selectedProject?.details}</Text>
           </ModalBody>
         </ModalContent>
       </Modal>
-    </Box>
+    </MotionBox>
   );
 }

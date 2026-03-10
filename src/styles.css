@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
 
 html {
@@ -6,11 +10,7 @@ html {
 
 body {
   margin: 0;
-}
-
-.tailwind-root {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: Inter, system-ui, sans-serif;
 }
 
 .sticky-glass {
@@ -21,22 +21,11 @@ body {
 
 .nav-hover {
   transition: all 0.25s ease;
-  position: relative;
 }
 
 .nav-hover:hover {
   transform: translateY(-2px);
   color: #8b79ff !important;
-}
-
-.scroll-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: linear-gradient(90deg, #6682ff, #935dff);
-  z-index: 2000;
 }
 
 .avatar-wrap {
@@ -56,6 +45,22 @@ body {
 .section-block {
   padding-top: 40px;
   padding-bottom: 24px;
+}
+
+.timeline-item {
+  border-left: 2px solid rgba(154, 169, 255, 0.5);
+  padding-left: 14px;
+}
+
+.timeline-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(136, 104, 255, 0.18);
+  color: #a78bfa;
 }
 
 .tech-card,
