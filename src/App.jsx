@@ -1,178 +1,205 @@
-import { useEffect } from 'react';
+import {
+  Badge,
+  Box,
+  Button,
+  Container,
+  Flex,
+  Grid,
+  GridItem,
+  HStack,
+  Heading,
+  IconButton,
+  Image,
+  Link,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  Text,
+  useColorMode,
+  useDisclosure,
+} from '@chakra-ui/react';
+import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import { useMemo, useState } from 'react';
 
 const technologies = [
-  'React',
-  'JavaScript (ES6+)',
-  'TypeScript',
-  'Node.js',
-  'HTML5 / CSS3',
-  'Git & GitHub',
-  'REST APIs',
-  'Figma',
+  { name: 'React', img: '/images/tech/react.svg' },
+  { name: 'JavaScript', img: '/images/tech/js.svg' },
+  { name: 'TypeScript', img: '/images/tech/ts.svg' },
+  { name: 'Node.js', img: '/images/tech/node.svg' },
 ];
 
 const projects = [
   {
     title: 'Plateforme e-commerce',
-    description:
-      'Développement d\'une boutique en ligne performante avec paiement sécurisé et tunnel d\'achat optimisé.',
+    image: '/images/projects/ecommerce.svg',
+    short: 'Boutique en ligne moderne avec conversion optimisée.',
+    details:
+      'Stack React + API REST, optimisation performance, tunnel d\'achat et suivi analytics pour améliorer le chiffre d\'affaires.',
   },
   {
     title: 'Dashboard analytics',
-    description:
-      'Conception d\'un tableau de bord interactif pour visualiser les KPI métier et piloter les décisions.',
+    image: '/images/projects/analytics.svg',
+    short: 'Visualisation KPI et reporting temps réel.',
+    details:
+      'Conception de tableaux de bord interactifs, filtres avancés, composants réutilisables et UX orientée prise de décision.',
   },
   {
-    title: 'Application de gestion RH',
-    description:
-      'Application interne pour gérer les congés, contrats, profils collaborateurs et workflows d\'approbation.',
+    title: 'Application RH',
+    image: '/images/projects/rh.svg',
+    short: 'Gestion des congés, contrats et profils collaborateurs.',
+    details:
+      'Interface sécurisée, workflows d\'approbation, gestion documentaire et amélioration de la productivité des équipes RH.',
   },
 ];
 
-const companies = ['TechNova', 'Digital Factory', 'Cloud Solutions', 'FinEdge'];
+const navLinks = ['about', 'technologies', 'projects', 'companies', 'contact'];
 
-const navLinks = [
-  { href: '#about', label: 'À propos' },
-  { href: '#technologies', label: 'Technologies' },
-  { href: '#projects', label: 'Projets' },
-  { href: '#companies', label: 'Entreprises' },
-  { href: '#contact', label: 'Contact' },
-];
+export default function App() {
+  const { colorMode, toggleColorMode } = useColorMode();
+  const [selectedProject, setSelectedProject] = useState(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-function App() {
-  useEffect(() => {
-    const sections = document.querySelectorAll('.reveal');
+  const bgPage = useMemo(() => (colorMode === 'dark' ? '#060816' : '#f7f8ff'), [colorMode]);
+  const textSoft = useMemo(() => (colorMode === 'dark' ? '#b3bee8' : '#4b577a'), [colorMode]);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-
-    sections.forEach((section) => observer.observe(section));
-
-    return () => observer.disconnect();
-  }, []);
+  const openProject = (project) => {
+    setSelectedProject(project);
+    onOpen();
+  };
 
   return (
-    <>
-      <div className="bg-orb orb-1" />
-      <div className="bg-orb orb-2" />
+    <Box bg={bgPage} minH="100vh" className="tailwind-root">
+      <Box className="scroll-progress" />
 
-      <header className="site-header" id="hero">
-        <nav className="navbar container">
-          <h1 className="logo">Portfolio React</h1>
+      <Box as="header" position="sticky" top="0" zIndex="1000" className="sticky-glass">
+        <Container maxW="7xl" py={3}>
+          <Flex align="center" justify="space-between" gap={3}>
+            <Heading size="md">Portfolio React</Heading>
+            <HStack spacing={4} display={{ base: 'none', lg: 'flex' }}>
+              {navLinks.map((item) => (
+                <Link key={item} href={`#${item}`} className="nav-hover" textTransform="capitalize">
+                  {item}
+                </Link>
+              ))}
+            </HStack>
+            <HStack>
+              <IconButton
+                aria-label="toggle mode"
+                icon={colorMode === 'dark' ? <SunIcon /> : <MoonIcon />}
+                onClick={toggleColorMode}
+              />
+              <Button as="a" href="/CV.pdf" download colorScheme="purple">
+                Télécharger CV
+              </Button>
+            </HStack>
+          </Flex>
+        </Container>
+      </Box>
 
-          <ul className="nav-menu">
-            {navLinks.map((link) => (
-              <li key={link.href}>
-                <a href={link.href}>{link.label}</a>
-              </li>
-            ))}
-          </ul>
+      <Container maxW="7xl" py={14}>
+        <Grid templateColumns={{ base: '1fr', md: '1.3fr 1fr' }} gap={10} alignItems="center">
+          <GridItem>
+            <Badge colorScheme="purple" px={3} py={1} borderRadius="full">
+              Développeur Frontend React
+            </Badge>
+            <Heading mt={4} size="2xl" lineHeight="1.1">
+              Portfolio moderne avec Tailwind CSS + Chakra UI
+            </Heading>
+            <Text mt={4} color={textSoft} fontSize="lg">
+              Design premium, sections claires, animation fluide et expérience utilisateur professionnelle.
+            </Text>
+            <HStack mt={6} spacing={3}>
+              <Button colorScheme="blue" as="a" href="#projects">
+                Voir mes projets
+              </Button>
+              <Button variant="outline" as="a" href="#contact">
+                Me contacter
+              </Button>
+            </HStack>
+          </GridItem>
+          <GridItem>
+            <Box className="avatar-wrap">
+              <Image src="/images/avatar.svg" alt="Avatar" boxSize="260px" mx="auto" />
+            </Box>
+          </GridItem>
+        </Grid>
+      </Container>
 
-          <a className="btn btn-small" href="/CV.pdf" download>
-            Télécharger CV
-          </a>
-        </nav>
-      </header>
+      <Container maxW="7xl" className="section-block" id="about">
+        <Heading size="lg">À propos de moi</Heading>
+        <Text mt={3} color={textSoft}>
+          J\'aide les entreprises à construire des interfaces web performantes, accessibles et élégantes.
+        </Text>
+      </Container>
 
-      <main>
-        <section className="hero container reveal visible">
-          <p className="badge">Développeur Frontend React</p>
-          <h2>Je transforme vos idées en expériences web élégantes et performantes.</h2>
-          <p className="lead">
-            Découvrez mon parcours, les technologies que j\'utilise, mes projets récents et les
-            entreprises qui m\'ont fait confiance.
-          </p>
-          <div className="hero-actions">
-            <a className="btn" href="#projects">
-              Voir mes projets
-            </a>
-            <a className="btn btn-outline" href="#contact">
-              Me contacter
-            </a>
-          </div>
-        </section>
+      <Container maxW="7xl" className="section-block" id="technologies">
+        <Heading size="lg">Technologies</Heading>
+        <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(4,1fr)' }} gap={4} mt={5}>
+          {technologies.map((tech) => (
+            <GridItem key={tech.name} className="tech-card hover-rise">
+              <Image src={tech.img} alt={tech.name} boxSize="52px" mx="auto" mb={2} />
+              <Text textAlign="center" fontWeight="semibold">
+                {tech.name}
+              </Text>
+            </GridItem>
+          ))}
+        </Grid>
+      </Container>
 
-        <section className="section container reveal" id="about">
-          <h3>À propos de moi</h3>
-          <p>
-            Passionné par le développement web, j\'accompagne les équipes produit dans la création
-            d\'interfaces intuitives, accessibles et maintenables. Mon parcours m\'a amené à livrer
-            des applications à fort trafic avec un haut niveau de qualité UX/UI.
-          </p>
-        </section>
+      <Container maxW="7xl" className="section-block" id="projects">
+        <Heading size="lg">Projets</Heading>
+        <Text color={textSoft} mt={2}>Cliquez sur un projet pour afficher les détails.</Text>
+        <Grid templateColumns={{ base: '1fr', md: 'repeat(3,1fr)' }} gap={5} mt={5}>
+          {projects.map((project) => (
+            <GridItem key={project.title} className="project-card hover-rise" onClick={() => openProject(project)}>
+              <Image src={project.image} alt={project.title} borderRadius="12px" />
+              <Heading size="md" mt={3}>{project.title}</Heading>
+              <Text mt={2} color={textSoft}>{project.short}</Text>
+            </GridItem>
+          ))}
+        </Grid>
+      </Container>
 
-        <section className="section container reveal" id="technologies">
-          <h3>Technologies</h3>
-          <ul className="chip-list">
-            {technologies.map((tech) => (
-              <li key={tech}>{tech}</li>
-            ))}
-          </ul>
-        </section>
+      <Container maxW="7xl" className="section-block" id="companies">
+        <Heading size="lg">Entreprises où j’ai travaillé</Heading>
+        <HStack mt={4} spacing={3} flexWrap="wrap">
+          {['TechNova', 'Digital Factory', 'Cloud Solutions', 'FinEdge'].map((company) => (
+            <Badge key={company} px={4} py={2} borderRadius="full" className="hover-rise">
+              {company}
+            </Badge>
+          ))}
+        </HStack>
+      </Container>
 
-        <section className="section container reveal" id="projects">
-          <h3>Projets</h3>
-          <div className="grid">
-            {projects.map((project) => (
-              <article key={project.title} className="card">
-                <h4>{project.title}</h4>
-                <p>{project.description}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+      <Container maxW="7xl" className="section-block" id="contact" pb={16}>
+        <Heading size="lg">Contact</Heading>
+        <Stack as="form" action="mailto:contact@monportfolio.dev" method="post" encType="text/plain" spacing={3} mt={4}>
+          <input className="input-ui" type="text" name="nom" placeholder="Nom" required />
+          <input className="input-ui" type="email" name="email" placeholder="Email" required />
+          <textarea className="input-ui" name="message" placeholder="Votre message" rows="5" required />
+          <Button type="submit" colorScheme="purple" alignSelf="flex-start">Envoyer email</Button>
+        </Stack>
+      </Container>
 
-        <section className="section container reveal" id="companies">
-          <h3>Entreprises où j\'ai travaillé</h3>
-          <ul className="company-list">
-            {companies.map((company) => (
-              <li key={company}>{company}</li>
-            ))}
-          </ul>
-        </section>
+      <Box as="footer" textAlign="center" py={6} borderTop="1px solid" borderColor="whiteAlpha.300">
+        <Text color={textSoft}>© {new Date().getFullYear()} Portfolio React</Text>
+      </Box>
 
-        <section className="section container reveal" id="contact">
-          <h3>Contact</h3>
-          <p className="lead">Vous avez une opportunité ou un projet ? Écrivez-moi directement.</p>
-          <form
-            className="contact-form"
-            action="mailto:contact@monportfolio.dev"
-            method="post"
-            encType="text/plain"
-          >
-            <label>
-              Nom
-              <input type="text" name="nom" required />
-            </label>
-            <label>
-              Email
-              <input type="email" name="email" required />
-            </label>
-            <label>
-              Message
-              <textarea name="message" rows="5" required />
-            </label>
-            <button type="submit" className="btn">
-              Envoyer email
-            </button>
-          </form>
-        </section>
-      </main>
-
-      <footer className="footer">
-        <p>© {new Date().getFullYear()} Portfolio React — Tous droits réservés.</p>
-      </footer>
-    </>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{selectedProject?.title}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            {selectedProject?.image && <Image src={selectedProject.image} alt={selectedProject.title} mb={4} borderRadius="md" />}
+            <Text>{selectedProject?.details}</Text>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </Box>
   );
 }
-
-export default App;
